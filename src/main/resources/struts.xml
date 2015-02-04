@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="true" />
+	<constant name="struts.custom.i18n.resources" value="global" />
+
+    <package name="default" extends="struts-default">
+
+		<!-- define the default-stack exception mapping interceptor so that 
+			 any exceptions not caught by the application will be logged and 
+			 then handled by the global exception mapping -->
+		<interceptors>
+			<interceptor-stack name="testAppStack">
+				<interceptor-ref name="createSession" />
+				<interceptor-ref name="tokenSession">
+					<param name="includeMethods">*</param>
+				</interceptor-ref>
+				<interceptor-ref name="logger" />
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">INFO</param>
+					<param name="params.excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*,submit,token</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="testAppStack" />
+
+		<global-results>
+			<result name="securityerror">/securityerror.jsp</result>
+			<result name="invalid.token">/securityerror.jsp</result>
+			<result name="error">/error.jsp</result>
+		</global-results>
+		
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.Exception" result="error" />
+		</global-exception-mappings>
+
+        <action name="index">
+        	<interceptor-ref name="testAppStack">
+        		<param name="tokenSession.excludeMethods">*</param>
+        	</interceptor-ref>
+			<result>/index.jsp</result>
+        </action>
+
+		<action name="*Registration" class="co.insecurity.struts2ref.action.RegistrationAction" method="{1}">
+			<interceptor-ref name="testAppStack">
+				<param name="validation.includeMethods">saveOrUpdate</param>
+				<param name="tokenSession.excludeMethods">prepare,input,execute,create,edit</param>
+			</interceptor-ref>
+			<result name="success">/view.jsp</result>
+			<result name="input">/input.jsp</result>
+		</action>
+    </package>
+</struts>

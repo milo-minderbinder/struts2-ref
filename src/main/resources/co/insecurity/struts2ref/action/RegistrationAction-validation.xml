@@ -1,0 +1,32 @@
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="person.firstName">
+		<field-validator type="requiredstring">
+			<message key="validation.requiredstring" />
+		</field-validator>
+		<field-validator type="regex">
+			<param name="regex">^[A-Za-z]*$</param>
+			<message key="validation.alphaonly" />
+		</field-validator>
+	</field>
+	
+	<field name="person.lastName">
+		<field-validator type="requiredstring">
+			<message key="validation.requiredstring" />
+		</field-validator>
+		<field-validator type="regex">
+			<param name="regex">^[A-Za-z]*$</param>
+			<message key="validation.alphaonly" />
+		</field-validator>
+	</field>
+
+	<field name="person.email">
+		<field-validator type="requiredstring">
+			<message key="validation.requiredstring" />
+		</field-validator>
+		<field-validator type="email">
+			<message>Email must be valid.</message>
+		</field-validator>
+	</field>
+</validators>
