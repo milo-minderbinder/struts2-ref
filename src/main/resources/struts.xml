@@ -15,6 +15,8 @@
 		<interceptors>
 			<interceptor-stack name="testAppStack">
 				<interceptor-ref name="createSession" />
+				<!-- Adds the CSRF token interceptor, and by default requires 
+					 the CSRF token on all actions -->
 				<interceptor-ref name="tokenSession">
 					<param name="includeMethods">*</param>
 				</interceptor-ref>
@@ -39,16 +41,21 @@
 			<exception-mapping exception="java.lang.Exception" result="error" />
 		</global-exception-mappings>
 
-        <action name="index">
-        	<interceptor-ref name="testAppStack">
-        		<param name="tokenSession.excludeMethods">*</param>
-        	</interceptor-ref>
+		<action name="index">
+			<interceptor-ref name="testAppStack">
+				<param name="tokenSession.excludeMethods">*</param>
+			</interceptor-ref>
 			<result>/index.jsp</result>
-        </action>
+		</action>
 
+		<!-- '*' prepended to action w/ method="{1}" registers each controller action method 
+			 (e.g. create, prepare, saveOrUpdate) as a Struts action as 
+			 <method name>Registrion.action (e.g. executeRegistration.action) -->
 		<action name="*Registration" class="co.insecurity.struts2ref.action.RegistrationAction" method="{1}">
 			<interceptor-ref name="testAppStack">
 				<param name="validation.includeMethods">saveOrUpdate</param>
+				<!-- Methods not explicitly excluded require the CSRF token per the default
+					 includeMethods="*" attribute set on the tokenSession interceptor -->
 				<param name="tokenSession.excludeMethods">prepare,input,execute,create,edit</param>
 			</interceptor-ref>
 			<result name="success">/view.jsp</result>

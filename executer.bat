@@ -1,3 +1,14 @@
+@echo off
+
+IF "%1" == "" (
+	echo Usage: executer.bat ^<command^>
+	echo Commands:
+	echo run	- clean, build, and deploy code, and launch in Tomcat
+	echo start	- start Tomcat container
+	echo stop	- stop Tomcat container
+	EXIT /b
+)
+
 pushd "%~dp0"
 set COMMAND=%1
 set TARGET="%CD%\target"
